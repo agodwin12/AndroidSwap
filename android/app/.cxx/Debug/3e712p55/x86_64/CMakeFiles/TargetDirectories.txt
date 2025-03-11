@@ -1,0 +1,2 @@
+C:/Users/insta/StudioProjects/swap/android/app/.cxx/Debug/3e712p55/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/insta/StudioProjects/swap/android/app/.cxx/Debug/3e712p55/x86_64/CMakeFiles/rebuild_cache.dir

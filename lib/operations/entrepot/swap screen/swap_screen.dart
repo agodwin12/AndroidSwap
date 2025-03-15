@@ -54,7 +54,7 @@ class _EntrepotSwapState extends State<EntrepotSwap> {
     try {
       print("🌍 [API CALL] Fetching batteries for entrepôt: ${widget.idEntrepot}");
       final response = await http.get(
-        Uri.parse("http://57.128.178.119:3010/api/batteries/entrepot/${widget.idEntrepot}"),
+        Uri.parse("http://10.0.2.2:3010/api/batteries/entrepot/${widget.idEntrepot}"),
       );
 
       if (response.statusCode == 200) {
@@ -90,7 +90,7 @@ class _EntrepotSwapState extends State<EntrepotSwap> {
       print("🌍 [API CALL] Fetching batteries for Agence ID: $agenceId");
 
       final response = await http.get(
-        Uri.parse("http://57.128.178.119:3010/api/batteries/agence/$agenceId"),
+        Uri.parse("http://10.0.2.2:3010/api/batteries/agence/$agenceId"),
       );
 
       if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class _EntrepotSwapState extends State<EntrepotSwap> {
       };
 
       var response = await http.post(
-        Uri.parse("http://57.128.178.119:3010/api/entrepotswapagence/perform-swap"),
+        Uri.parse("http://10.0.2.2:3010/api/entrepotswapagence/perform-swap"),
         headers: {"Content-Type": "application/json"},
         body: json.encode(payload),
       );

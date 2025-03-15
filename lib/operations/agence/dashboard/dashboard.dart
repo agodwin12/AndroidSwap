@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swap/operations/agence/lease/lease%20history/lease_history.dart';
+import 'package:swap/operations/agence/lease/screen/leasePayment.dart';
 import 'package:swap/operations/agence/profile%20user%20agence/my_profile.dart';
 import '../../authentication/login.dart';
 import '../history agence/history_agence.dart';
@@ -23,11 +25,11 @@ class _DashboardAgenceState extends State<DashboardAgence> {
 
   bool isLoading = true;
 
-  //  color
-  static const Color primaryColor = Color(0xFF6C63FF);    // Modern purple
-  static const Color secondaryColor = Color(0xFF2A2D3E);  // Dark blue-grey
-  static const Color accentColor = Color(0xFF00D9F5);     // Cyan
-  static const Color backgroundColor = Color(0xFFF5F7FF); // Light blue-grey
+  // New color scheme with DCDB32 as primary
+  static const Color primaryColor = Color(0xFFDCDB32);    // Gold/Yellow
+  static const Color secondaryColor = Color(0xFF2D2D2D);  // Dark gray
+  static const Color accentColor = Color(0xFF35383F);     // Darker shade for contrast
+  static const Color backgroundColor = Color(0xFFF8F8F8); // Light background
   static const Color cardColor = Colors.white;
 
   @override
@@ -40,22 +42,19 @@ class _DashboardAgenceState extends State<DashboardAgence> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      agenceId = prefs.getString('id_agence') ?? 'N/A'; // ✅ Keep id_agence as is
-      uniqueId = prefs.getString('unique_id') ?? 'N/A'; // ✅ Keep unique_id as is
+      agenceId = prefs.getString('id_agence') ?? 'N/A';
+      uniqueId = prefs.getString('unique_id') ?? 'N/A';
       email = prefs.getString('email') ?? 'N/A';
       location = prefs.getString('location') ?? 'N/A';
       userType = prefs.getString('userType') ?? 'N/A';
-
-      // ✅ Store full name separately
-      fullName = prefs.getString('name') ?? "User"; // ✅ Corrected fullName usage
-
+      fullName = prefs.getString('name') ?? "User";
       isLoading = false;
     });
 
     print("🔍 [DEBUG] Loaded from SharedPreferences:");
     print("✅ agenceId: $agenceId");
-    print("✅ Unique ID: $uniqueId"); // ✅ Now keeps uniqueId unchanged
-    print("✅ User Name: $fullName"); // ✅ New fullName for display
+    print("✅ Unique ID: $uniqueId");
+    print("✅ User Name: $fullName");
   }
 
   @override
@@ -74,7 +73,7 @@ class _DashboardAgenceState extends State<DashboardAgence> {
     final List<Map<String, dynamic>> dashboardItems = [
       {
         'title': 'SWAP',
-        'icon': Icons.swap_horiz,
+        'icon': Icons.swap_horiz_rounded,
         'color': primaryColor,
         'onTap': () {
           if (agenceId != null && agenceId!.isNotEmpty) {
@@ -95,14 +94,14 @@ class _DashboardAgenceState extends State<DashboardAgence> {
       },
       {
         'title': 'HISTORY',
-        'icon': Icons.history,
-        'color': accentColor,
+        'icon': Icons.history_rounded,
+        'color': primaryColor,
         'onTap': () {
           if (uniqueId != null && uniqueId!.isNotEmpty) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HistoryAgence(uniqueId: uniqueId ?? ''), // ✅ Ensure non-null
+                builder: (context) => HistoryAgence(uniqueId: uniqueId ?? ''),
               ),
             );
           } else {
@@ -112,26 +111,67 @@ class _DashboardAgenceState extends State<DashboardAgence> {
             );
           }
         },
-
       },
-
       {
         'title': 'PROFILE',
-        'icon': Icons.person,
-        'color': secondaryColor,
+        'icon': Icons.person_rounded,
+        'color': primaryColor,
         'onTap': () {
           Navigator.push(
-            context,
-          MaterialPageRoute(builder:
-          (context)=>ProfileScreen()
-          )
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen())
           );
-
+        },
+      },
+      {
+        'title': 'LEASE',
+        'icon': Icons.payments_rounded,
+        'color': primaryColor,
+        'onTap': () {
+          if (agenceId != null && agenceId!.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CollectPaymentScreen(
+                  agenceId: agenceId!,
+                  uniqueId: uniqueId!,
+                  email: email!,
+                  location: location!,
+                  userType: userType!,
+                  fullName: fullName!,
+                ),
+              ),
+            );
+          } else {
+            print("❌ ERROR: Missing required data before navigating to Lease Page!");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error: Missing required user data.")),
+            );
+          }
+        },
+      },
+      {
+        'title': 'LEASE HISTORY',
+        'icon': Icons.receipt_long_rounded,
+        'color': primaryColor,
+        'onTap': () {
+          if (agenceId != null && agenceId!.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LeaseHistoryScreen(uniqueId: uniqueId!),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error: Missing agence ID")),
+            );
+          }
         },
       },
       {
         'title': 'LOGOUT',
-        'icon': Icons.logout,
+        'icon': Icons.logout_rounded,
         'color': Colors.redAccent,
         'onTap': () => _showLogoutDialog(context),
       },
@@ -139,114 +179,221 @@ class _DashboardAgenceState extends State<DashboardAgence> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        elevation: 0,
-        title: Column(
-          children: [
-            Text(
-              'Welcome Back!',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-              ),
-            ),
-            Text(
-              fullName ?? 'User',
-              style: GoogleFonts.poppins(
-                color: Colors.white70,
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(24),
-          ),
-        ),
-      ),
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+            // Modern header with curved bottom - Responsive height
+            Container(
+              height: MediaQuery.of(context).size.height * 0.22,
+              constraints: BoxConstraints(maxHeight: 200, minHeight: 150),
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: primaryColor.withOpacity(0.1),
-                      radius: 24,
-                      child: Icon(
-                        Icons.location_on,
-                        color: primaryColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withOpacity(0.3),
+                    blurRadius: 15,
+                    offset: Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  // Decorative elements
+                  Positioned(
+                    right: -20,
+                    top: -20,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        shape: BoxShape.circle,
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Current Location',
-                            style: GoogleFonts.poppins(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            location ?? 'Unknown Location',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+                  ),
+                  Positioned(
+                    left: -30,
+                    bottom: -30,
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        shape: BoxShape.circle,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  // Header content
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Welcome Back,',
+                                  style: GoogleFonts.poppins(
+                                    color: secondaryColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  fullName ?? 'User',
+                                  style: GoogleFonts.poppins(
+                                    color: secondaryColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 8,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.notifications_none_rounded,
+                                color: secondaryColor,
+                                size: 28,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                        // Location Card - Fixed for responsiveness
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_rounded,
+                                color: primaryColor,
+                                size: 24,
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Current Location',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.grey[600],
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Text(
+                                      location ?? 'Unknown Location',
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: secondaryColor,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 4),
+
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            SizedBox(height: 10),
+
+            // Dashboard title
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Row(
+                children: [
+                  Text(
+                    'Dashboard',
+                    style: GoogleFonts.poppins(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: secondaryColor,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Grid of dashboard items
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.1,
+                  physics: BouncingScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: MediaQuery.of(context).size.width < 360 ? 1 : 2,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: MediaQuery.of(context).size.width < 360 ? 2.5 : 1.1,
                   ),
                   itemCount: dashboardItems.length,
                   itemBuilder: (context, index) {
                     final item = dashboardItems[index];
+                    final isLogout = item['title'] == 'LOGOUT';
                     return GestureDetector(
                       onTap: item['onTap'],
                       child: Container(
                         decoration: BoxDecoration(
-                          color: cardColor,
+                          color: isLogout ? Colors.red.withOpacity(0.1) : Colors.white,
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.05),
                               blurRadius: 10,
-                              offset: const Offset(0, 4),
+                              offset: const Offset(0, 5),
                             ),
                           ],
                         ),
@@ -256,13 +403,15 @@ class _DashboardAgenceState extends State<DashboardAgence> {
                             Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                color: item['color'].withOpacity(0.1),
+                                color: isLogout
+                                    ? Colors.red.withOpacity(0.1)
+                                    : primaryColor.withOpacity(0.2),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 item['icon'],
-                                color: item['color'],
-                                size: 32,
+                                color: isLogout ? Colors.red : secondaryColor,
+                                size: 30,
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -270,8 +419,8 @@ class _DashboardAgenceState extends State<DashboardAgence> {
                               item['title'],
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: secondaryColor,
+                                fontSize: 14,
+                                color: isLogout ? Colors.red : secondaryColor,
                               ),
                             ),
                           ],
@@ -295,7 +444,7 @@ void _showLogoutDialog(BuildContext context) {
     builder: (BuildContext context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
         ),
         title: Text(
           'Confirm Logout',
@@ -317,7 +466,14 @@ void _showLogoutDialog(BuildContext context) {
               ),
             ),
           ),
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFDCDB32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 0,
+            ),
             onPressed: () async {
               final SharedPreferences prefs =
               await SharedPreferences.getInstance();
@@ -331,7 +487,7 @@ void _showLogoutDialog(BuildContext context) {
             child: Text(
               'Logout',
               style: GoogleFonts.poppins(
-                color: Colors.red,
+                color: Color(0xFF2D2D2D),
                 fontWeight: FontWeight.w600,
               ),
             ),

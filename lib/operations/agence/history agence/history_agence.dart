@@ -41,7 +41,7 @@ class _HistoryAgenceState extends State<HistoryAgence> {
 
   Future<void> fetchSwapHistory() async {
     final String trimmedId = widget.uniqueId.trim();
-    final String apiUrl = "http://57.128.178.119:3010/api/history-agence/$trimmedId";
+    final String apiUrl = "http://10.0.2.2:3010/api/history-agence/$trimmedId";
 
     print("🔍 [DEBUG] API Request URL: $apiUrl");
 

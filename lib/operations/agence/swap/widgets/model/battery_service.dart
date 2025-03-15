@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'battery.dart';
 
 class BatteryService {
-  static const String baseUrl = 'http://57.128.178.119:3010/api';
+  static const String baseUrl = 'http://10.0.2.2:3010/api';
 
   Future<List<Battery>> fetchOutgoingBatteries(String agenceId) async {
     final url = '$baseUrl/agenceswapbatteries/$agenceId';

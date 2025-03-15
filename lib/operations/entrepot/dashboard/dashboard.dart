@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swap/operations/agence/lease/screen/leasePayment.dart';
 import 'package:swap/operations/authentication/login.dart';
 import 'package:swap/operations/entrepot/history/historyentrepot.dart';
 import 'package:swap/operations/entrepot/swap%20screen/swap%20type/swap_type.dart';
@@ -97,6 +98,7 @@ class _DashboardEntrepotState extends State<DashboardEntrepot> {
           );
         },
       },
+
       {
         'title': 'LOGOUT',
         'icon': Icons.logout,

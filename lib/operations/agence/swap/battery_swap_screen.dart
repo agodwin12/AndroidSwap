@@ -99,7 +99,7 @@ class _AgenceSwapPageState extends State<AgenceSwapPage> {
   }
 
   Future<void> fetchOutgoingBatteries() async {
-    final url = "http://57.128.178.119:3010/api/agenceswapbatteries/${widget.agenceId}";
+    final url = "http://10.0.2.2:3010/api/agenceswapbatteries/${widget.agenceId}";
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -121,7 +121,7 @@ class _AgenceSwapPageState extends State<AgenceSwapPage> {
       isFetchingOutgoingSOC = true;
     });
 
-    final url = "http://57.128.178.119:3010/api/batteries/soc/$macId";
+    final url = "http://10.0.2.2:3010/api/batteries/soc/$macId";
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -147,7 +147,7 @@ class _AgenceSwapPageState extends State<AgenceSwapPage> {
       isFetchingIncomingSOC = true;
     });
 
-    final url = "http://57.128.178.119:3010/api/battery/details";
+    final url = "http://10.0.2.2:3010/api/battery/details";
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -409,7 +409,7 @@ class _AgenceSwapPageState extends State<AgenceSwapPage> {
       };
 
       final response = await http.post(
-        Uri.parse('http://57.128.178.119:3010/api/swap'),
+        Uri.parse('http://10.0.2.2:3010/api/swap'),
         body: json.encode(requestData),
         headers: {'Content-Type': 'application/json'},
       );

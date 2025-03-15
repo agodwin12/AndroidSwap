@@ -32,7 +32,7 @@ class _DistributorSwapTypeState extends State<DistributorSwapType> {
 
   /// **Fetch Agencies from API**
   Future<void> _fetchAgencies() async {
-    const String apiUrl = "http://57.128.178.119:3010/api/swaps/agencies";
+    const String apiUrl = "http://10.0.2.2:3010/api/swaps/agencies";
 
     setState(() {
       isLoading = true;

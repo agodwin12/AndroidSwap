@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-    final String apiUrl = "http://57.128.178.119:3010/api/users-entrepot/$uniqueId";
+    final String apiUrl = "http://10.0.2.2:3010/api/users-entrepot/$uniqueId";
     print("🔍 Fetching user profile from: $apiUrl");
 
     try {

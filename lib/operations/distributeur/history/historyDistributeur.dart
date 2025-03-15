@@ -33,7 +33,7 @@ class _DistributeurHistoryScreenState extends State<DistributeurHistoryScreen> {
     });
 
     final url =
-        "http://57.128.178.119:3010/api/historique/distributeur/${widget.distributeurUniqueId}";
+        "http://10.0.2.2:3010/api/historique/distributeur/${widget.distributeurUniqueId}";
 
     try {
       final response = await http.get(Uri.parse(url));

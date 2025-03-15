@@ -51,8 +51,8 @@ class _SwapTypeState extends State<SwapType> {
     if (swapType == null) return;
 
     final String apiUrl = swapType == "Distributor"
-        ? "http://57.128.178.119:3010/api/swaps/distributors"
-        : "http://57.128.178.119:3010/api/swaps/agencies";
+        ? "http://10.0.2.2:3010/api/swaps/distributors"
+        : "http://10.0.2.2:3010/api/swaps/agencies";
 
     try {
       print("🌍 [API CALL] Fetching data from: $apiUrl");

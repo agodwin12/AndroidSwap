@@ -298,11 +298,11 @@ class _DistributorSwapState extends State<DistributorSwap> {
       print(
           "🌍 [API CALL] Fetching batteries for Distributeur ID: $distributeurId");
       print(
-          "🌍 [API CALL] URL: http://57.128.178.119:3010/api/distributeur/$distributeurId");
+          "🌍 [API CALL] URL: http://10.0.2.2:3010/api/distributeur/$distributeurId");
 
       final response = await http.get(
         Uri.parse(
-            "http://57.128.178.119:3010/api/distributorswapbatteries/$distributeurId"),
+            "http://10.0.2.2:3010/api/distributorswapbatteries/$distributeurId"),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -373,7 +373,7 @@ class _DistributorSwapState extends State<DistributorSwap> {
         return;
       }
 
-      final apiUrl = "http://57.128.178.119:3010/api/batteries/agencedist/$agenceId";
+      final apiUrl = "http://10.0.2.2:3010/api/batteries/agencedist/$agenceId";
       print("🌍 [API CALL] Fetching batteries from: $apiUrl");
 
       final response = await http.get(Uri.parse(apiUrl));
@@ -462,7 +462,7 @@ class _DistributorSwapState extends State<DistributorSwap> {
       print("📥 [DEBUG] Incoming MAC IDs: $incomingMacIds");
 
       final Uri apiUrl =
-          Uri.parse("http://57.128.178.119:3010/api/distributeuragenceswap");
+          Uri.parse("http://10.0.2.2:3010/api/distributeuragenceswap");
       final response = await http.post(
         apiUrl,
         headers: {'Content-Type': 'application/json'},

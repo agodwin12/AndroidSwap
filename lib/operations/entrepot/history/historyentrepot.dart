@@ -56,7 +56,7 @@ class _UserSwapHistoryState extends State<UserSwapHistory> {
       return;
     }
 
-    final String apiUrl = "http://57.128.178.119:3010/api/historique-entrepot/$userUniqueId";
+    final String apiUrl = "http://10.0.2.2:3010/api/historique-entrepot/$userUniqueId";
 
     try {
       final response = await http.get(Uri.parse(apiUrl)).timeout(

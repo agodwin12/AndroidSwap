@@ -54,7 +54,7 @@ class _DistributeurSwapEntrepotState extends State<DistributeurSwapEntrepot> {
     try {
       print("🌍 [API CALL] Fetching batteries for entrepôt: ${widget.idEntrepot}");
       final response = await http.get(
-        Uri.parse("http://57.128.178.119:3010/api/batteries/entrepot/${widget.idEntrepot}"),
+        Uri.parse("http://10.0.2.2:3010/api/batteries/entrepot/${widget.idEntrepot}"),
       );
 
       if (response.statusCode == 200) {
@@ -78,7 +78,7 @@ class _DistributeurSwapEntrepotState extends State<DistributeurSwapEntrepot> {
     try {
       print("🌍 [API CALL] Fetching batteries for Distributeur ID: ${widget.distributeurId}");
 
-      final url = Uri.parse("http://57.128.178.119:3010/api/batteries/distributeur/${widget.distributeurId}");
+      final url = Uri.parse("http://10.0.2.2:3010/api/batteries/distributeur/${widget.distributeurId}");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -131,7 +131,7 @@ class _DistributeurSwapEntrepotState extends State<DistributeurSwapEntrepot> {
       print("🚀 [API CALL] Sending swap request: ${json.encode(payload)}");
 
       var response = await http.post(
-        Uri.parse("http://57.128.178.119:3010/api/swap/battery-entrepot"),
+        Uri.parse("http://10.0.2.2:3010/api/swap/battery-entrepot"),
         headers: {"Content-Type": "application/json"},
         body: json.encode(payload),
       );
